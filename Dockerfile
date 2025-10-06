@@ -1,18 +1,17 @@
-# Step 1: Use the official Apache HTTP Server image as base
-FROM httpd:2.4
+# Use the official Nginx image
+FROM nginx:alpine
 
-# Step 2: Set the working directory inside the container
-WORKDIR /usr/local/apache2/htdocs/
+# Set working directory inside the container
+WORKDIR /usr/share/nginx/html
 
-# Step 3: Copy your website files (index.html and others if needed)
-COPY index.html /usr/local/apache2/htdocs/
+# Remove default nginx static files
+RUN rm -rf ./*
 
-# (Optional) – If you have a full website folder, use:
-# COPY ./website/ /usr/local/apache2/htdocs/
+# Copy all files from current directory on host into nginx html folder
+COPY . .
 
-# Step 4: Expose port 80 to the outside world
+# Expose port 80 for web traffic
 EXPOSE 80
 
-# Step 5: Start Apache (default command from httpd image)
-CMD ["httpd-foreground"]
-
+# Start nginx (already configured in base image)
+CMD ["nginx", "-g", "daemon off;"]
